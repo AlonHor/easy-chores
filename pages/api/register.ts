@@ -30,6 +30,25 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     let { email, password } = req.body;
+    if (email && password) {
+      if (
+        !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+          email
+        )
+      ) {
+        res.status(400).json({ error: "Invalid email" });
+        return;
+      }
+      if (password.length < 6) {
+        res
+          .status(400)
+          .json({ error: "Password must be at least 8 characters" });
+        return;
+      }
+    } else {
+      res.status(400).json({ error: "Email and password are required" });
+      return;
+    }
     const hash = new SHA3(512);
     hash.update(password);
     password = hash.digest("hex");

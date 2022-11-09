@@ -46,7 +46,7 @@ export default async function handler(
         const token = randomUUID();
         await setDoc(doc(db, "users", user.id), { token }, { merge: true });
         res.status(200).json({ token });
-      }
+      } else res.status(400).json({ error: "Incorrect password!" });
     }
   }
 }
